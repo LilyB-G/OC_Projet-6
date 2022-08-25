@@ -1,8 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+//Importation du package http de Node
 const http = require('http');
+//Importation de app.js
 const app = require('./app');
 
+//Renvoi un port valide, sous forme d'une chaîne
 const normalizePort = val => {
   const port = parseInt(val, 10);
 
@@ -14,9 +17,13 @@ const normalizePort = val => {
   }
   return false;
 };
+
+//Définition du port 3000
 const port = normalizePort(process.env.PORT || '3000');
+//Définition du port pour app.js
 app.set('port', port);
 
+//Recherche des différentes erreurs
 const errorHandler = error => {
   if (error.syscall !== 'listen') {
     throw error;
@@ -37,15 +44,16 @@ const errorHandler = error => {
   }
 };
 
+//Création du serveur
 const server = http.createServer(app);
 
+//Ecoute des erreurs
 server.on('error', errorHandler);
 server.on('listening', () => {
   const address = server.address();
   const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
   console.log('Listening on ' + bind);
 });
-
 
 
 server.listen(port);
