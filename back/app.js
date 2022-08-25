@@ -1,11 +1,11 @@
-const express = require('express');
-const app = express();
+const express = require('express'); //Importation du apckage Express
+const app = express(); //Appel de la méthode Express
 const cors = require('cors');
-const path = require('path');
-const mongoose = require('mongoose');
-const recipeRoute = require('./routes/recipe')
-const userRoute = require('./routes/user');
-const morgan = require('morgan')
+const path = require('path'); //Importation de 'path' pour définir les chemins
+const mongoose = require('mongoose'); //Importation du package Mongoose (sert à définir les types de variables et à structurer les données)
+const recipeRoute = require('./routes/recipe'); //importation du router "recipe"
+const userRoute = require('./routes/user'); //importation du router "user"
+const morgan = require('morgan') //middleware qui enregistre les requests
 
 
 morgan.token('body',(req => JSON.stringify (req.body)));
@@ -14,13 +14,7 @@ app.use(morgan(':url :method :body '));
 
 app.use(express.json());
 
-
-  app.use(function(err, req, res, next) {
-    // 'SyntaxError: Unexpected token n in JSON at position 0'
-    err.message;
-    next(err);
-  });
-
+  //Connexion à la base de données avec password et id
 mongoose.connect('mongodb+srv://teddybear:dGG9W47VcfjDEPv@project6.sbm3pe6.mongodb.net/?retryWrites=true&w=majority',
     {
         useNewUrlParser: true,
@@ -28,14 +22,7 @@ mongoose.connect('mongodb+srv://teddybear:dGG9W47VcfjDEPv@project6.sbm3pe6.mongo
     })
     
     .then(() => console.log('Connection MongoDB ok'))
-    .catch(() => console.log('echec connection mongoDB'));
-
-app.use((req, res, next) => {
-    res.status(205);
-    console.log('request received');
-    next();
-});
-
+    .catch(() => console.log('MongoDB connection failed'));
 
 // headers Cors
 app.use((req, res, next) => {
@@ -45,19 +32,15 @@ app.use((req, res, next) => {
     next();
 });
 
-
 app.use('/', cors());
 app.options('*', cors());
 
-// routes
-
+// Gestion des routes
 app.use('/api/sauces', recipeRoute);
 app.use('/api/auth', userRoute ); 
 
 //dossier images
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('images', express.static(path.join(__dirname, '/images')));
 
-
-
-
+//exportation de la constante app
 module.exports = app;
