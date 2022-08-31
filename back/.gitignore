@@ -1,1 +1,8 @@
+#api
+/api
+
+# node
 /node_modules
+
+# DOT env
+.env 
